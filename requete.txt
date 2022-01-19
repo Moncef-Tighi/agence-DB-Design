@@ -1,0 +1,141 @@
+
+
+1-Date de toute les réservation, avec l'adresse' complète du bien, le nom du propriétaire, le nom du locataire, 
+et combien la location a coutée
+
+
+SELECT date_debut, date_fin, locataire.nom as locataire, numero_maison, etage, quartier, wilaya.nom as wilaya, ville.nom as ville, 
+proprietaire.nom as proprietaire, payement_complet.montant as prix_total
+
+FROM reservation
+INNER JOIN locataire ON locataire.id_locataire=reservation.id_locataire
+INNER JOIN bien_immobilier ON bien_immobilier.id_bien=reservation.id_bien
+INNER JOIN description ON description.id_bien= reservation.id_bien
+INNER JOIN proprietaire ON proprietaire.id_proprietaire= bien_immobilier.id_proprietaire
+INNER JOIN prix_reel ON prix_reel.id_reservation= reservation.id_location
+INNER JOIN payement_complet ON payement_complet.id_prix= prix_reel.id_prix
+INNER JOIN adresse ON description.id_description= adresse.id_description
+INNER JOIN wilaya ON adresse.wilaya_id= wilaya.wilaya_id
+INNER JOIN ville ON adresse.ville_id= ville.ville_id
+ORDER BY prix_total ASC 
+
+directeur
+2- Nombre de jour de réservation groupé par client et classé du plus élevé au plus faible
+
+SELECT nom as client, SUM(DATEDIFF(date_fin, date_debut)) as durée FROM reservation
+INNER JOIN proprietaire ON proprietaire.id_proprietaire = reservation.id_locataire
+GROUP BY nom
+ORDER BY SUM(DATEDIFF(date_fin, date_debut)) DESC 
+
+
+3- chiffre d'affaire estimé de l'entreprise en 2022 avec affichage de la monnaie utilisée.
+
+SELECT CONCAT(SUM(montant)," DA") as chiffre_affaire_2022 FROM payement_complet
+INNER JOIN prix_reel ON payement_complet.id_paiment= prix_reel.id_prix
+INNER JOIN reservation ON prix_reel.id_reservation=reservation.id_location
+WHERE date_debut>"2021-12-30" AND date_debut<"2023-01-01"
+
+4-nom et prénom des clients qui ont loués au moins une maison qu'ils n'ont pas visités.
+
+SELECT nom,prenom FROM locataire
+WHERE id_locataire NOT IN (
+  SELECT id_locataire FROM reservation WHERE EXISTS(
+      SELECT id_locataire FROM visite)
+    )
+
+5-Classement des biens selon leur proximité à la plage
+
+SELECT description.id_bien,distance as distance_plage FROM description, fiche_proximite, lieu_interet
+WHERE fiche_proximite.id_description= description.id_description
+AND lieu_interet.id_type= fiche_proximite.id_type
+AND lieu_interet.type_lieu="plage"
+ORDER BY distance ASC
+
+6-Ce que l'agence' devra reverser à chaque propriétaire
+
+SELECT nom,prenom,CONCAT(SUM(montant)," DA") FROM versement_location, proprietaire
+WHERE versement_location.id_proprietaire= proprietaire.id_proprietaire
+GROUP BY nom, prenom
+
+7-Liste des payements qui n'ont pas 'encore été effectués ou vérifiés par le dircteur
+
+SELECT id_paiment, montant, "payement complet" as type_payement FROM payement_complet
+WHERE payement_complet.encaisse=0
+UNION 
+SELECT id_versement, montant, "Versement au propriétairee" FROM versement_location
+WHERE versement_location.verse=0
+UNION 
+SELECT id_paiment, montant, "pre-paiment(arrhes)" FROM arrhes
+WHERE arrhes.encaisse =0
+
+
+8-Pourcentage d'occupation de tout les bien immobiliers en 2022
+
+
+SELECT id_bien, CONCAT(( SUM(DATEDIFF(date_fin,date_debut)) / 365 * 100 ), " %") as "Pourcentage d'occupation" FROM reservation
+WHERE date_debut>="2022-01-01" AND date_fin<="2022-12-30"
+GROUP BY id_bien
+
+9-liste des employés de l'entreprise' avec leurs informations personnels 
+
+SELECT nom, prenom, adresse_email, date_naissance, salaire, poste.poste as rôle FROM employe
+INNER JOIN poste ON poste.id_poste= employe.poste
+
+
+
+10-Distance (en km) qui sépare tout les biens immobiliers de l'agence' entre eux (multiplication+self-join)
+
+SELECT a.id_bien as "FROM ", b.id_bien AS "TO ", a.longitude AS longitude1 , a.latitude AS latitude1, b.longitude AS longitude2 , b.latitude AS latitude2,
+CONCAT( (6371 * acos( cos( radians(b.latitude) ) * cos( radians( a.latitude ) ) * cos( radians( a.longitude ) - radians( b.longitude) ) 
++ sin( radians(b.latitude) ) * sin( radians( a.latitude ) )) ), " Km" ) as distance 
+FROM bien_immobilier AS a
+INNER JOIN bien_immobilier AS b
+WHERE a.id_bien!=b.id_bien
+
+Note : Dans cet exemple, vu qu'on' utilise la multiplication, certaines valeurs se répète.
+Dans une situation réel on ajouterait plutôt quelque chose comme "AND a.id_bien= 1 " à la fin du WHERE.
+Mais ça enleverait la multiplication. Hors, je voulais avoir au moins un exemple de multiplication
+
+
+
+
+
+Quelques querry intéressantes que j'ai implémenté dans l'application' :
+
+
+
+-Afficher un ensemble d'informations' au sujet du bien immibilié sélectionné
+
+SELECT tarif_nuit, type, nom, prenom, surface, nombre_piece, bien_immobilier.id_bien,
+description.id_description,longitude,latitude FROM bien_immobilier
+INNER JOIN proprietaire ON proprietaire.id_proprietaire = bien_immobilier.id_proprietaire
+INNER JOIN type_bien ON type_bien.id_type= bien_immobilier.id_type
+INNER JOIN description ON description.id_bien= bien_immobilier.id_bien
+WHERE :id = bien_immobilier.id_bien
+
+-à partir de ID_description recuppéré dans la querry d'avant, obtenir l'adresse' : 
+
+SELECT numero_maison, etage, quartier, wilaya.nom as wilaya, ville.nom as ville FROM adresse
+INNER JOIN wilaya ON wilaya.wilaya_id = adresse.wilaya_id
+INNER JOIN ville ON ville.ville_id = adresse.ville_id
+WHERE id_description=:id_description
+
+
+-Ajouter une nouvelle adresse en utilisant un id_description créé juste avant
+ (donc logiquement, l'id_description' avec la valeur la plus élevée)
+
+INSERT INTO adresse(numero_maison, etage, quartier, wilaya_id, ville_id, id_description)
+SELECT :numero_maison, :etage, :quartier, :wilaya_id, :ville_id, id_description 
+FROM description ORDER BY id_description DESC LIMIT 1
+
+
+-Tester si le bien immobilier demandé est déjà réservé dans les dates indiqués : 
+
+SELECT date_debut,date_fin FROM reservation
+    WHERE reservation.id_bien=:id_bien
+    AND date_debut BETWEEN :date_debut AND :date_fin
+    OR date_fin BETWEEN :date_debut AND :date_fin 
+    OR :date_debut BETWEEN date_debut AND date_fin
+    LIMIT 1
+
+Si le résultat de cette querry est vide, ça veut dire que c'est bon. Sinon il faut annuler.

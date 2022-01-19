@@ -1,0 +1,91 @@
+#container ul{
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-row-gap: 10px;
+    grid-column-gap: 35px;
+    font-size: 20px;
+    list-style: none;
+
+}
+
+#map  {
+    height: 500px;
+    overflow: hidden;
+    padding: 10px;
+    padding-top:30px;
+    margin: 20px;
+    border-top:black 5px solid;
+}
+
+#map img {
+    max-width: auto;
+    max-height: auto;
+    border: none;
+
+}
+span {
+    display: none;
+}
+.fiches {
+    display: flex;
+    padding:10px;
+    margin-top: 20px;
+    justify-content: space-around;
+    border-top:black 5px solid;
+}
+
+.mySlides{
+    max-width: 500px;
+    display: none;
+}
+#number1 {
+  display: block;  
+}
+
+.slideshow_container{
+    position: relative;
+    max-width: fit-content;
+}
+
+.w3-display-left {
+    position: absolute;
+    top: 40%;
+    left: 0;
+    width: 40px;
+    height: 40px;
+}
+.w3-display-right {
+    position: absolute;
+    top: 40%;
+    right: 0px;
+    width: 40px;
+    height: 40px;
+
+}
+
+.flex {
+    display: flex;
+    flex-flow: row-reverse;
+}
+
+table {
+    border: solid 1px #DDEEEE;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font: normal 13px Arial, sans-serif;
+    font-size: 20px;
+}
+table th {
+    background-color: #DDEFEF;
+    border: solid 1px #DDEEEE;
+    color: #336B6B;
+    padding: 10px;
+    text-align: left;
+    text-shadow: 1px 1px 1px #fff;
+}
+table tbody td {
+    border: solid 1px #DDEEEE;
+    color: #333;
+    padding: 10px;
+    text-shadow: 1px 1px 1px #fff;
+}

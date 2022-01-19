@@ -1,0 +1,27 @@
+#container {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-row-gap: 20px;
+    grid-column-gap: 35px;
+}
+
+
+a.button {
+    appearance: button;
+    display: block;
+    text-decoration: none;
+    color: initial;
+    height: 60px;
+    width: 90%;
+    background-color: #111 ;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border: #111 solid 3px ;
+
+}
+a.button:hover {
+    background-color: rgb(255, 255, 255) ;
+    color:black;
+}

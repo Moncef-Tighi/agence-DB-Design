@@ -1,0 +1,39 @@
+<?php
+
+session_start();
+$user=$_SESSION['username'];
+$autorisastion=$_SESSION['poste'];
+
+if ($user=="" || isset($_GET["déconnexion"]))  {
+    session_destroy();
+    header('Location: ../../index.php');
+}
+?>
+
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html"; charset="utf-8">
+    <link rel="stylesheet" href="../CSS/main.css" media="screen" type="text/css" />
+    <link rel="stylesheet" href="../CSS/footer.css" media="screen" type="text/css" />
+    <link rel="stylesheet" href="../CSS/header.css" media="screen" type="text/css" />
+    
+	<title>SunLocation</title>
+
+</head>
+
+<div class="nav">
+    <div class="nav-title">
+        SunLocation
+      </div>
+ 
+     <div class="nav-links">
+         <ul>
+            <li><a href="accueil.php">Accueil</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="liste_bien.php">Appartements</a></li>
+            <li><a href="liste_réservation.php">Réservations</a></li>
+            <li><a href="?déconnexion=1">Déconnexion</a></li>
+        <!--Social Icon-->
+         </ul>
+     </div>
+   </div>

@@ -1,0 +1,51 @@
+  
+  .nav {
+    height: 50px;
+    background-color: #111;
+    position: relative;
+    padding: 10px;
+  }
+  .nav > .nav-header {
+    display: inline;
+  }
+  
+  .nav > .nav-title {
+    display: inline-block;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 10px 10px 10px 10px;
+    font-size: 34px;
+    color: red;
+    font-weight: 550;
+  }
+  .nav > .nav-links {
+    font-size: 26px;
+    display: inline;
+    float: right;
+
+  }
+  .nav > .nav-links > ul li a{
+    color: #fff;
+    line-height: 40px;
+    font-size: 18px;
+    display: block;
+    padding: 0 8px;
+    text-decoration: none;
+
+  }
+  .nav > .nav-links > ul{
+    list-style: none;
+    position: relative;
+    padding: 0;
+    margin-top: 5px;
+    
+  }
+  .nav > .nav-links > ul li{
+    display: inline-block;
+    background-color: rgb(53, 53, 53);
+    
+    
+  }
+  .nav > .nav-links > ul li:hover{
+      background-color: rgb(121, 121, 121);
+      border-radius: 5px;
+  }

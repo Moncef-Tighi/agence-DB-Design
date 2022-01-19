@@ -1,0 +1,77 @@
+body {
+  background: #afafaf88;
+  margin: 0;
+}
+#container {
+  width: 80%;
+  padding: 30px;
+  border: 1px solid #f1f1f1;
+  background: #fff;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  margin-top: 8%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 8%;
+}
+#container-form {
+  width: 600px;
+  margin: 0 auto;
+  margin-top: 10%;
+
+}
+/* Style de base pour toute les formes */
+form {
+  padding: 30px;
+}
+#container-form>form {
+  width: 100%;
+  border: 1px solid #f1f1f1;
+  background: #fff;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+
+}
+#container-form h1 {
+  width: 38%;
+  margin: 0 auto;
+  padding-bottom: 10px;
+}
+
+/* Full-width inputs */
+input, textarea{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+input[type="radio"] {
+  width: 25px;
+  padding:0px;
+  margin: 0px;
+}
+/* Set a style for all buttons */
+input[type="submit"] {
+  background-color: #53af57;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+input[type="submit"]:hover {
+  background-color: white;
+  color: #53af57;
+  border: 1px solid #53af57;
+}
+
+select {
+  display: block;
+  height: 40px;
+  width: 75%;
+  font-size: 25px;
+  padding: 4px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
